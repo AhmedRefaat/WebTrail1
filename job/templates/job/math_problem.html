@@ -1,0 +1,22 @@
+<!-- math_problem.html -->
+
+
+{% block content %}
+<div class="container">
+  <h1>Math Problem</h1>
+  <div class="card">
+    <div class="card-body">
+      <h3>Solve the following problem:</h3>
+      <p>$${{ problem }}$$</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="answer">Your Answer:</label>
+          <input type="text" class="form-control" id="answer" name="answer" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
