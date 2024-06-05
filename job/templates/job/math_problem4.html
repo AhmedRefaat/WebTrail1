@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Problem</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var timeoutDuration = {{ timeout_duration }};
+            var timeoutTimer;
+
+            function startTimer() {
+                timeoutTimer = setInterval(function() {
+                    timeoutDuration--;
+                    $('#timeout-timer').text(timeoutDuration);
+                    if (timeoutDuration === 0) {
+                        clearInterval(timeoutTimer);
+                        $('#math-form').submit();
+                    }
+                }, 1000);
+            }
+
+            startTimer();
+
+            // Make the answer textbox always active
+            $('input[name="answer"]').focus();
+
+            // Submit the form on pressing the Enter key
+            $('input[name="answer"]').keypress(function(event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $('#math-form').submit();
+                }
+            });
+
+            $('#math-form').submit(function(event) {
+                event.preventDefault();
+                clearInterval(timeoutTimer);
+                this.submit();
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Math Problem</h1>
+    <p>Solve the following problem:</p>
+    <p>{{ problem }}</p>
+    <form id="math-form" method="post" action="{% url 'math_problem4' %}">
+        {% csrf_token %}
+        <input type="number" name="answer" required autofocus>
+        <button type="submit">Submit</button>
+        <!-- <button type="submit" name="finish">Finish</button> -->
+        <button onclick="location.href = 'report'">Finish</button>
+
+
+    </form>
+    <p>Time remaining: <span id="timeout-timer">{{ timeout_duration }}</span> seconds</p>
+    <p>Correct answers: {{ correct_count }}</p>
+    <p>Wrong answers: {{ wrong_count }}</p>
+    <p>Timeouts: {{ timeout_count }}</p>
+</body>
+</html>
