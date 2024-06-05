@@ -1,6 +1,6 @@
 global Debug_Msg
 
-Debug_Msg = True
+Debug_Msg = False
 
 
 def LogDebugMsgs(msg:str) -> None:
