@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report</title>
+</head>
+<body>
+    <h1>Report</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Problem</th>
+                <th>Correct Answer</th>
+                <th>Your Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for problem in problems %}
+            <tr>
+                <td>{{ problem.problem }}</td>
+                <td>{{ problem.correct_answer }}</td>
+                <td>{% if problem.user_answer is not None %}{{ problem.user_answer }}{% else %}Timeout{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Correct Answers: {{ correct_count }}</p>
+    <p>Wrong Answers: {{ wrong_count }}</p>
+    <p>Timeouts: {{ timeout_count }}</p>
+    <p>Note: {{ note }}</p>
+</body>
+</html>
