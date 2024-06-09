@@ -2,12 +2,12 @@ body {
     margin: 0;
     display: flex;
     min-height: 100vh;
-    flex-direction: row-reverse; /* Reverse order to put sidebar on the right */
+    flex-direction: column; /* Stack vertically on mobile */
 }
 
 #wrapper {
     display: flex;
-    flex: 1;
+    flex-direction: column; /* Stack content and sidebar on mobile */
 }
 
 #content {
@@ -16,10 +16,9 @@ body {
 }
 
 #sidebar {
-    width: 250px; /* Set the width of the sidebar */
-    background-color: #f0f0f0; /* Sidebar background color */
+    display: none; /* Hide sidebar on mobile */
+    background-color: #f0f0f0;
     padding: 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
 }
 
 #sidebar ul {
@@ -32,27 +31,28 @@ body {
     padding: 10px;
     text-decoration: none;
     color: #333;
-    border-bottom: 1px solid #ddd; /* Optional border */
+    border-bottom: 1px solid #ddd;
 }
 
 #sidebar ul li a:hover {
-    background-color: #ddd; /* Hover effect */
+    background-color: #ddd;
 }
 
+/* Table styles for correct, incorrect, timeout, and no-answer states */
 table tr.correct {
-    background-color: #90EE90; /* Light green */
+    background-color: #90EE90;
 }
 
 table tr.incorrect {
-    background-color: #FFB6C1; /* Light red */
+    background-color: #FFB6C1;
 }
 
 table tr.timeout {
-    background-color: #FFFF99; /* Light yellow */
+    background-color: #FFFF99;
 }
 
 table tr.no-answer {
-    background-color: #FFCCCB; /* Light red */
+    background-color: #FFCCCB;
     font-weight: bold;
 }
 
@@ -63,33 +63,39 @@ table {
 
 table th, table td {
     padding: 15px;
-    text-align: left;
+    text-align: center;
     border: 1px solid #ddd;
-    border-style: outset; /* 3D effect for borders */
+    border-style: outset;
 }
 
-/* Ensure the styles are not being overridden by other styles */
-/* You can add !important to enforce the style, but use it as a last resort */
-.correct {
-    background-color: #90EE90 !important;
+/* Media query for tablets and desktops */
+@media screen and (min-width: 768px) {
+    body {
+        flex-direction: row-reverse; /* Sidebar on the right for larger screens */
+    }
+
+    #wrapper {
+        flex-direction: row; /* Row layout for larger screens */
+    }
+
+    #sidebar {
+        display: block; /* Show sidebar on larger screens */
+        width: 250px;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Restore table styles to normal on larger screens */
+    table {
+        display: table;
+        overflow-x: auto;
+    }
 }
 
-.incorrect {
-    background-color: #FFB6C1 !important;
-}
-
-.timeout {
-    background-color: #FFFF99 !important;
-}
-
-.no-answer {
-    background-color: #FFCCCB !important;
-    font-weight: bold !important;
-}
-
-table th, table td {
-    padding: 15px;
-    text-align: center; /* Center align table cell content */
-    border: 1px solid #ddd;
-    border-style: outset; /* 3D effect for borders */
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto; /* Allow horizontal scrolling */
+        white-space: nowrap; /* Keep table in one line */
+    }
 }
