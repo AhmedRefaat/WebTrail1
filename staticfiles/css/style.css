@@ -2,12 +2,13 @@ body {
     margin: 0;
     display: flex;
     min-height: 100vh;
-    flex-direction: column; /* Stack vertically on mobile */
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
 #wrapper {
     display: flex;
-    flex-direction: column; /* Stack content and sidebar on mobile */
+    flex-direction: column;
 }
 
 #content {
@@ -16,10 +17,26 @@ body {
 }
 
 #sidebar {
-    display: none; /* Hide sidebar on mobile */
+    position: fixed;
+    left: -250px;
+    width: 250px;
     background-color: #f0f0f0;
     padding: 20px;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s;
+    z-index: 1000;
 }
+
+#sidebar-toggle {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 1001;
+    cursor: pointer;
+    /* Additional styling for the toggle button */
+}
+
 
 #sidebar ul {
     list-style-type: none;
@@ -79,9 +96,12 @@ table th, table td {
     }
 
     #sidebar {
-        display: block; /* Show sidebar on larger screens */
-        width: 250px;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        left: 0;
+    }
+
+    #sidebar-toggle {
+        display: none;
     }
 
     /* Restore table styles to normal on larger screens */

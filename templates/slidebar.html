@@ -1,0 +1,40 @@
+{% load static %}
+
+<!-- Sidebar toggle button -->
+<div id="sidebar-toggle">☰</div>
+
+<!-- Sidebar -->
+<div id="sidebar">
+    <!-- Navigation Menu -->
+    <ul>
+        <li><a href="{% url 'math_home' %}">Home</a></li>
+        <!-- Add other app-specific links here -->
+        <!-- Example:
+        <li><a href="{% url 'app1_home' %}">App 1</a></li>
+        <li><a href="{% url 'app2_home' %}">App 2</a></li>
+        -->
+        <!-- More links for other apps can be added here -->
+    </ul>
+</div>
+
+<script>
+// Add event listener to ensure the script runs after the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the sidebar and the toggle button elements
+    var sidebar = document.getElementById('sidebar');
+    var sidebarToggle = document.getElementById('sidebar-toggle');
+
+    // Add click event listener to the toggle button
+    sidebarToggle.addEventListener('click', function() {
+        // Check if the sidebar is currently visible
+        var sidebarLeft = sidebar.style.left;
+        if (sidebarLeft === '0px') {
+            // If visible, slide out to hide
+            sidebar.style.left = '-250px';
+        } else {
+            // If hidden, slide in to show
+            sidebar.style.left = '0px';
+        }
+    });
+});
+</script>

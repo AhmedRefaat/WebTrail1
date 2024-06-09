@@ -12,18 +12,9 @@
 </head>
 <body>
     <div id="wrapper">
+        {% include 'slidebar.html' %}
         <div id="content">
             {% block content %}{% endblock %}
-        </div>
-        <div id="sidebar">
-            <!-- Navigation Menu -->
-            <ul>
-                <li><a href="{% url 'math_home' %}">Home</a></li>
-                <!-- Add other app links here -->
-                <!-- <li><a href="{% url 'math_home' %}">App 1</a></li>
-                <li><a href="{% url 'math_home' %}">App 2</a></li> -->
-                <!-- More links for other apps -->
-            </ul>
         </div>
     </div>
 </body>
