@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
 
-    path('', views.job_list),
+    # path('', views.job_list),
+    path('', views.math_home, name='math_home'),
     path('all', views.job_list),
     path('<int:id>', views.job_detail),
     path('problems1', views.Add_Sub_Problems),

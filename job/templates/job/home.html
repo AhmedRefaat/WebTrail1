@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Math_Application Homepage{% endblock %}
+{% block content %}
+    <h1>Welcome to the Problem Solver</h1>
+    <!-- Additional content for the home page goes here -->
+    <form action="{% url 'math_problem4' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="difficulty">Enter the maximum number for problem difficulty:</label>
+            <input type="number" name="difficulty" id="difficulty" min="1" required title="Please enter a valid integer">
+        </div>
+        <div>
+            <label for="timeout">Set the timeout per problem (10-120 seconds):</label>
+            <input type="number" name="timeout" id="timeout" min="10" max="120" required title="Timeout must be between 10 to 120 seconds">
+        </div>
+        <button type="submit">Start Problem Solving</button>
+    </form>
+{% endblock %}
