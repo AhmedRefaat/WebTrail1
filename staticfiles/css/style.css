@@ -2,8 +2,7 @@ body {
     margin: 0;
     display: flex;
     min-height: 100vh;
-    flex-direction: column;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 #wrapper {
@@ -14,29 +13,31 @@ body {
 #content {
     flex-grow: 1;
     padding: 20px;
+    transition: margin-left 0.3s; /* Smooth transition for content margin */
 }
 
 #sidebar {
     position: fixed;
-    left: -250px;
+    left: -250px; /* Start off-screen */
     width: 250px;
     background-color: #f0f0f0;
     padding: 20px;
     height: 100%;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: left 0.3s;
-    z-index: 1000;
+    transition: left 0.3s; /* Smooth transition for sidebar */
+    z-index: 2; /* Ensure sidebar is above content */
 }
 
 #sidebar-toggle {
     position: fixed;
     left: 10px;
     top: 10px;
-    z-index: 1001;
+    z-index: 3; /* Above sidebar and content */
     cursor: pointer;
     /* Additional styling for the toggle button */
 }
 
+/* ... Other styles ... */
 
 #sidebar ul {
     list-style-type: none;
@@ -85,7 +86,6 @@ table th, table td {
     border-style: outset;
 }
 
-/* Media query for tablets and desktops */
 @media screen and (min-width: 768px) {
     body {
         flex-direction: row-reverse; /* Sidebar on the right for larger screens */
@@ -96,23 +96,56 @@ table th, table td {
     }
 
     #sidebar {
-        position: relative;
+        position: relative; /* Always visible on larger screens */
         left: 0;
     }
 
     #sidebar-toggle {
-        display: none;
+        display: none; /* Hide toggle button on larger screens */
     }
 
-    /* Restore table styles to normal on larger screens */
+    #content {
+        margin-left: 0; /* No margin shift on larger screens */
+    }
+
     table {
         display: table;
         overflow-x: auto;
     }
 }
 
-/* Media query for mobile devices */
 @media screen and (max-width: 768px) {
+    #content {
+        margin-left: 0; /* Content not shifted by default */
+    }
+
+    /* Mobile devices in portrait orientation */
+    @media screen and (max-width: 768px) and (orientation: portrait) {
+        #sidebar-toggle {
+            display: block; /* Show toggle button in portrait */
+        }
+
+        #sidebar {
+            z-index: 3; /* Ensure sidebar is above content */
+        }
+
+        #content.active {
+            margin-left: -250px; /* Shift content when sidebar is visible */
+        }
+    }
+
+    /* Mobile devices in landscape orientation */
+    @media screen and (max-width: 768px) and (orientation: landscape) {
+        #sidebar {
+            position: relative; /* Always visible in landscape */
+            left: 0;
+        }
+
+        #sidebar-toggle {
+            display: none; /* Hide toggle button in landscape */
+        }
+    }
+
     table {
         display: block;
         overflow-x: auto; /* Allow horizontal scrolling */
