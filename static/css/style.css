@@ -38,3 +38,58 @@ body {
 #sidebar ul li a:hover {
     background-color: #ddd; /* Hover effect */
 }
+
+table tr.correct {
+    background-color: #90EE90; /* Light green */
+}
+
+table tr.incorrect {
+    background-color: #FFB6C1; /* Light red */
+}
+
+table tr.timeout {
+    background-color: #FFFF99; /* Light yellow */
+}
+
+table tr.no-answer {
+    background-color: #FFCCCB; /* Light red */
+    font-weight: bold;
+}
+
+/* 3D effect for table borders */
+table {
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-style: outset; /* 3D effect for borders */
+}
+
+/* Ensure the styles are not being overridden by other styles */
+/* You can add !important to enforce the style, but use it as a last resort */
+.correct {
+    background-color: #90EE90 !important;
+}
+
+.incorrect {
+    background-color: #FFB6C1 !important;
+}
+
+.timeout {
+    background-color: #FFFF99 !important;
+}
+
+.no-answer {
+    background-color: #FFCCCB !important;
+    font-weight: bold !important;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center; /* Center align table cell content */
+    border: 1px solid #ddd;
+    border-style: outset; /* 3D effect for borders */
+}

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Job
 from common_utils import logger
 import random, time
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 
 global timeout_count2
@@ -132,8 +134,123 @@ def math_problem3(request):
     }
     return render(request, 'job/math_problem3.html', context)
 
-
 def math_problem4(request):
+     # **New** Check if the request comes from the home page
+    if request.method == 'POST':
+        referrer = request.META.get('HTTP_REFERER')
+        home_url = request.build_absolute_uri(reverse('math_home'))  # Assuming 'home' is the name of your home page URL
+        if referrer == home_url:
+            # The request comes from the home page, reset the session
+            request.session.flush()
+            request.session.create()
+
+     # Scenario 1: Handle the configuration submission from the "home" view
+    if 'difficulty' not in request.session or 'timeout_duration' not in request.session:
+        if request.method == 'POST':
+            difficulty = int(request.POST.get('difficulty'))
+            timeout_duration = int(request.POST.get('timeout'))
+            request.session['difficulty'] = difficulty
+            request.session['timeout_duration'] = timeout_duration
+            # Initialize the session variables for counts
+            request.session['correct_count'] = 0
+            request.session['wrong_count'] = 0
+            request.session['timeout_count'] = 0
+            request.session['problems'] = []  # To track each problem and status
+        else:
+            # If the settings are not in the session and method is not POST, redirect to home
+            return redirect('math_home')
+
+    # Initialize or retrieve current problem count and problem list from the session
+    correct_count = request.session.get('correct_count', 0)
+    wrong_count = request.session.get('wrong_count', 0)
+    timeout_count = request.session.get('timeout_count', 0)
+    problems = request.session.get('problems', [])
+
+    # Scenario 5: Check if the user pressed the "finish" button
+    if request.method == 'POST' and 'finish' in request.POST:
+        user_answer = request.POST.get('answer')
+        current_problem = request.session.get('current_problem')
+        correct_answer = request.session.get('correct_answer')
+
+        # Check if an answer was provided
+        if user_answer:
+            if int(user_answer) == correct_answer:
+                correct_count += 1
+                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'correct', 'user_answer': user_answer})
+            else:
+                wrong_count += 1
+                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'incorrect', 'user_answer': user_answer})
+        else:
+            timeout_count += 1
+            problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'timeout'})
+
+        # Update the session variables
+        request.session['correct_count'] = correct_count
+        request.session['wrong_count'] = wrong_count
+        request.session['timeout_count'] = timeout_count
+        request.session['problems'] = problems
+
+        # Redirect to the report page
+        return redirect('report')
+
+    # Scenario 2 and 3: Check if the user submitted an answer
+    if request.method == 'POST':
+        user_answer = request.POST.get('answer')
+        current_problem = request.session.get('current_problem')
+        correct_answer = request.session.get('correct_answer')
+
+        # If an answer was submitted, determine if it's correct or incorrect
+        if user_answer:
+            if int(user_answer) == correct_answer:
+                correct_count += 1
+                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'correct', 'user_answer': user_answer})
+            else:
+                wrong_count += 1
+                problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'incorrect', 'user_answer': user_answer})
+        else:
+            # Scenario 4: If no answer is given and the counter times out
+            timeout_count += 1
+            problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'timeout'})
+
+        # Update the session variables
+        request.session['correct_count'] = correct_count
+        request.session['wrong_count'] = wrong_count
+        request.session['timeout_count'] = timeout_count
+        request.session['problems'] = problems
+
+    # Generate a new problem
+    difficulty = request.session['difficulty']
+    operand1 = random.randint(1, difficulty)
+    operand2 = random.randint(1, difficulty)
+    operator = random.choice(['+', '-'])
+    if operator == '-':
+        operand1, operand2 = max(operand1, operand2), min(operand1, operand2)
+
+    current_problem = f"{operand1} {operator} {operand2}"
+    correct_answer = eval(current_problem)
+
+    # Store the current problem and its answer in the session
+    request.session['current_problem'] = current_problem
+    request.session['correct_answer'] = correct_answer
+
+    # Prepare the context for rendering
+    context = {
+        'problem': current_problem,
+        'timeout_duration': request.session['timeout_duration'],
+        'correct_count': correct_count,
+        'wrong_count': wrong_count,
+        'timeout_count': timeout_count,
+    }
+
+    # Render the math_problem4.html template with the context
+    return render(request, 'job/math_problem4.html', context)
+
+
+
+
+
+
+def math_problem40(request):
     # Set the timeout duration (in seconds)
     timeout_duration = 10  # 60 seconds
 
@@ -169,6 +286,7 @@ def math_problem4(request):
     timeout_count = request.session['timeout_count']
     problems = request.session['problems']
 
+
     # # Handle the form submission
     # if request.method == 'POST':
     #     if 'finish' in request.POST:
@@ -201,6 +319,7 @@ def math_problem4(request):
     # Handle the form submission
     if request.method == 'POST':
         logger.LogDebugMsgs('**********************************************************************')
+        logger.LogDebugMsgs(f'Correct Answer: {request.session["correct_count"] } and POSTED answer: {request.POST.get("answer")}')
         logger.LogDebugMsgs(f'POST content: {request.POST}')
         logger.LogDebugMsgs('**********************************************************************')
         if 'finish' in request.POST:

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django Project{% endblock %}</title>
     {% block head %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.2">
     <!-- Additional head elements can be placed here -->
 </head>
 <body>
@@ -20,8 +20,8 @@
             <ul>
                 <li><a href="{% url 'math_home' %}">Home</a></li>
                 <!-- Add other app links here -->
-                <li><a href="{% url 'math_home' %}">App 1</a></li>
-                <li><a href="{% url 'math_home' %}">App 2</a></li>
+                <!-- <li><a href="{% url 'math_home' %}">App 1</a></li>
+                <li><a href="{% url 'math_home' %}">App 2</a></li> -->
                 <!-- More links for other apps -->
             </ul>
         </div>
