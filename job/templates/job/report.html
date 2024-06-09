@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Report</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+
+{% block title %}You Today Report 😀{% endblock %}
+
+{% block content %}
     <h1>Report</h1>
     <table>
         <thead>
@@ -27,5 +27,4 @@
     <p>Wrong Answers: {{ wrong_count }}</p>
     <p>Timeouts: {{ timeout_count }}</p>
     <p>Note: {{ note }}</p>
-</body>
-</html>
+{% endblock %}

@@ -23,6 +23,10 @@ def job_detail(request, id):
     context = {'job':job_detail}
     return render(request, 'job/job_detail.html', context)
 
+def math_home (request):
+    context = {}
+    return render(request, 'job/home.html', context)
+
 def Add_Sub_Problems(request):
     problem = get_problem()
     context = {'problem':problem}

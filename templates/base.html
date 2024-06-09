@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django Project{% endblock %}</title>
+    {% block head %}{% endblock %}
+
+    <a href="/">
+        <h1>Home</h1>
+    </a>
+    <hr>
+    <!-- Additional head elements can be placed here -->
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <!-- Navigation Menu -->
+            <ul>
+                <li><a href="{% url 'math_home' %}">Home</a></li>
+                <!-- Add other app links here -->
+                <li><a href="{% url 'math_home' %}">App 1</a></li>
+                <li><a href="{% url 'math_home' %}">App 2</a></li>
+                <!-- More links for other apps -->
+            </ul>
+        </div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
