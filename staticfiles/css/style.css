@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row-reverse; /* Reverse order to put sidebar on the right */
+}
+
+#wrapper {
+    display: flex;
+    flex: 1;
+}
+
+#content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+#sidebar {
+    width: 250px; /* Set the width of the sidebar */
+    background-color: #f0f0f0; /* Sidebar background color */
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sidebar ul li a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #ddd; /* Optional border */
+}
+
+#sidebar ul li a:hover {
+    background-color: #ddd; /* Hover effect */
+}
+
+table tr.correct {
+    background-color: #90EE90; /* Light green */
+}
+
+table tr.incorrect {
+    background-color: #FFB6C1; /* Light red */
+}
+
+table tr.timeout {
+    background-color: #FFFF99; /* Light yellow */
+}
+
+table tr.no-answer {
+    background-color: #FFCCCB; /* Light red */
+    font-weight: bold;
+}
+
+/* 3D effect for table borders */
+table {
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-style: outset; /* 3D effect for borders */
+}
+
+/* Ensure the styles are not being overridden by other styles */
+/* You can add !important to enforce the style, but use it as a last resort */
+.correct {
+    background-color: #90EE90 !important;
+}
+
+.incorrect {
+    background-color: #FFB6C1 !important;
+}
+
+.timeout {
+    background-color: #FFFF99 !important;
+}
+
+.no-answer {
+    background-color: #FFCCCB !important;
+    font-weight: bold !important;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center; /* Center align table cell content */
+    border: 1px solid #ddd;
+    border-style: outset; /* 3D effect for borders */
+}
