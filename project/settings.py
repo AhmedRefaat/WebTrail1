@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG","FALSE").lower() == "true"
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -94,8 +94,8 @@ DATABASES = {
 #For testing the online postgres DB
 # DATABASES["default"] = dj_database_url.parse("postgres://mysite:8sxNWPEFbo25jrzDOUiRYfhel5PiyaAY@dpg-cpdpkvnsc6pc7395jisg-a.oregon-postgres.render.com/mysite_unkq")
 
-database_url = os.environ.get("DATABASE_URL")
-DATABASES["default"] = dj_database_url.parse(database_url)
+# database_url = os.environ.get("DATABASE_URL")
+# DATABASES["default"] = dj_database_url.parse(database_url)
 #postgres://mysite:8sxNWPEFbo25jrzDOUiRYfhel5PiyaAY@dpg-cpdpkvnsc6pc7395jisg-a.oregon-postgres.render.com/mysite_unkq
 
 

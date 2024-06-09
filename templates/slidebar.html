@@ -7,7 +7,7 @@
 <div id="sidebar">
     <!-- Navigation Menu -->
     <ul>
-        <li><a href="{% url 'math_home' %}">Home</a></li>
+        <li><a href="/Jobs/">Home</a></li>
         <!-- Add other app-specific links here -->
         <!-- Example:
         <li><a href="{% url 'math_home' %}">App 1</a></li>
@@ -22,16 +22,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var sidebarToggle = document.getElementById('sidebar-toggle');
-    var content = document.getElementById('content');
 
     sidebarToggle.addEventListener('click', function() {
-        var sidebarLeft = sidebar.style.left;
+        // Use 'window.getComputedStyle' to get the actual value of 'left' as 'style.left' relies on inline styles
+        var sidebarLeft = window.getComputedStyle(sidebar).left;
         if (sidebarLeft === '0px') {
             sidebar.style.left = '-250px';
-            content.classList.remove('active');
         } else {
             sidebar.style.left = '0px';
-            content.classList.add('active');
         }
     });
 });

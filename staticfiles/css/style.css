@@ -6,26 +6,26 @@ body {
 }
 
 #wrapper {
+    flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Stack vertically on mobile */
 }
 
 #content {
     flex-grow: 1;
     padding: 20px;
-    transition: margin-left 0.3s; /* Smooth transition for content margin */
 }
 
 #sidebar {
     position: fixed;
-    left: -250px; /* Start off-screen */
+    left: -250px; /* Start off-screen on mobile */
     width: 250px;
     background-color: #f0f0f0;
     padding: 20px;
     height: 100%;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     transition: left 0.3s; /* Smooth transition for sidebar */
-    z-index: 2; /* Ensure sidebar is above content */
+    z-index: 2; /* Ensure sidebar is above content when displayed */
 }
 
 #sidebar-toggle {
@@ -36,8 +36,6 @@ body {
     cursor: pointer;
     /* Additional styling for the toggle button */
 }
-
-/* ... Other styles ... */
 
 #sidebar ul {
     list-style-type: none;
@@ -86,69 +84,47 @@ table th, table td {
     border-style: outset;
 }
 
-@media screen and (min-width: 768px) {
-    body {
-        flex-direction: row-reverse; /* Sidebar on the right for larger screens */
-    }
-
-    #wrapper {
-        flex-direction: row; /* Row layout for larger screens */
-    }
-
-    #sidebar {
-        position: relative; /* Always visible on larger screens */
-        left: 0;
-    }
-
-    #sidebar-toggle {
-        display: none; /* Hide toggle button on larger screens */
-    }
-
-    #content {
-        margin-left: 0; /* No margin shift on larger screens */
-    }
-
-    table {
-        display: table;
-        overflow-x: auto;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #content {
-        margin-left: 0; /* Content not shifted by default */
-    }
-
+/* Media query for mobile devices */
+@media screen and (max-width: 767px) {
     /* Mobile devices in portrait orientation */
-    @media screen and (max-width: 768px) and (orientation: portrait) {
+    @media (orientation: portrait) {
         #sidebar-toggle {
-            display: block; /* Show toggle button in portrait */
-        }
-
-        #sidebar {
-            z-index: 3; /* Ensure sidebar is above content */
-        }
-
-        #content.active {
-            margin-left: -250px; /* Shift content when sidebar is visible */
+            display: block; /* Show toggle button on mobile portrait */
         }
     }
 
     /* Mobile devices in landscape orientation */
-    @media screen and (max-width: 768px) and (orientation: landscape) {
+    @media (orientation: landscape) {
         #sidebar {
-            position: relative; /* Always visible in landscape */
+            position: fixed; /* Always visible in landscape */
             left: 0;
         }
-
+        #content {
+            padding-left: 270px; /* Add padding to content for sidebar */
+        }
         #sidebar-toggle {
             display: none; /* Hide toggle button in landscape */
         }
     }
+}
 
-    table {
-        display: block;
-        overflow-x: auto; /* Allow horizontal scrolling */
-        white-space: nowrap; /* Keep table in one line */
+/* Media query for tablets and desktops */
+@media screen and (min-width: 768px) {
+    body {
+        flex-direction: row; /* Sidebar on the right for larger screens */
+    }
+    #wrapper {
+        /* No need to set flex-direction for larger screens, 'row' is redundant */
+    }
+    #sidebar {
+        position: fixed; /* Always visible on larger screens */
+        right: 0; /* Align to the right side */
+        left: auto; /* Override previous left positioning */
+    }
+    #content {
+        padding-right: 270px; /* Add padding to content for sidebar */
+    }
+    #sidebar-toggle {
+        display: none; /* Hide toggle button on larger screens */
     }
 }
