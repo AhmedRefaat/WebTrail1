@@ -1,3 +1,4 @@
+/* Base layout styles */
 body {
     margin: 0;
     display: flex;
@@ -37,6 +38,7 @@ body {
     /* Additional styling for the toggle button */
 }
 
+/* Sidebar navigation menu styles */
 #sidebar ul {
     list-style-type: none;
     padding: 0;
@@ -54,7 +56,19 @@ body {
     background-color: #ddd;
 }
 
-/* Table styles for correct, incorrect, timeout, and no-answer states */
+/* Table styles */
+table {
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-style: outset;
+}
+
+/* Table row background colors for different states */
 table tr.correct {
     background-color: #90EE90;
 }
@@ -72,39 +86,35 @@ table tr.no-answer {
     font-weight: bold;
 }
 
-/* 3D effect for table borders */
-table {
-    border-collapse: collapse;
-}
-
-table th, table td {
-    padding: 15px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-style: outset;
-}
-
-/* Media query for mobile devices */
-@media screen and (max-width: 767px) {
-    /* Mobile devices in portrait orientation */
-    @media (orientation: portrait) {
-        #sidebar-toggle {
-            display: block; /* Show toggle button on mobile portrait */
-        }
+/* Media query for mobile devices in portrait orientation */
+@media screen and (max-width: 767px) and (orientation: portrait) {
+    #content {
+        margin-left: auto; /* Align content to the right */
+        margin-right: 20px; /* 20px margin on the right */
     }
 
-    /* Mobile devices in landscape orientation */
-    @media (orientation: landscape) {
-        #sidebar {
-            position: fixed; /* Always visible in landscape */
-            left: 0;
-        }
-        #content {
-            padding-left: 270px; /* Add padding to content for sidebar */
-        }
-        #sidebar-toggle {
-            display: none; /* Hide toggle button in landscape */
-        }
+    #sidebar-toggle {
+        right: 20px; /* Position toggle 20px from the right */
+        left: auto; /* Override any previous left positioning */
+    }
+
+    #sidebar {
+        /* Adjust the sidebar so it doesn't overlap the content's margin */
+        left: -250px; /* Start off-screen on mobile portrait */
+    }
+}
+
+/* Media query for mobile devices in landscape orientation */
+@media screen and (max-width: 767px) and (orientation: landscape) {
+    #sidebar {
+        position: fixed; /* Always visible in landscape */
+        left: 0;
+    }
+    #content {
+        padding-left: 270px; /* Add padding to content for sidebar */
+    }
+    #sidebar-toggle {
+        display: none; /* Hide toggle button in landscape */
     }
 }
 
@@ -113,15 +123,13 @@ table th, table td {
     body {
         flex-direction: row; /* Sidebar on the right for larger screens */
     }
-    #wrapper {
-        /* No need to set flex-direction for larger screens, 'row' is redundant */
-    }
     #sidebar {
         position: fixed; /* Always visible on larger screens */
         right: 0; /* Align to the right side */
         left: auto; /* Override previous left positioning */
     }
     #content {
+        margin-left: 0; /* Content takes full width on the left */
         padding-right: 270px; /* Add padding to content for sidebar */
     }
     #sidebar-toggle {
