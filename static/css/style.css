@@ -180,3 +180,45 @@ table tr.no-answer {
         margin-top: 20px;
     }
 }
+
+#content form {
+    max-width: 600px; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the form in the content div */
+    padding: 1em;
+    background: #f9f9f9;
+    border-radius: 3px;
+}
+
+#content form div {
+    margin-bottom: 1em; /* Space out the form elements */
+}
+
+#content form label {
+    display: block; /* Make labels block level for better control */
+    margin-bottom: 0.5em; /* Small space between label and input */
+}
+
+#content form input[type="number"],
+#content form input[type="text"] {
+    width: calc(100% - 1em); /* Full width input fields */
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#content form input[type="checkbox"] {
+    margin-right: 0.5em; /* Space out checkboxes from their labels */
+}
+
+#content form button {
+    padding: 0.5em 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#content form button:hover {
+    background-color: #0056b3;
+}

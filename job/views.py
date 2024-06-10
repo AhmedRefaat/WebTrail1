@@ -134,129 +134,166 @@ def math_problem3(request):
     }
     return render(request, 'job/math_problem3.html', context)
 
+
+def generate_math_problem(problem_types, difficulty, multiplication_difficulty=None, division_difficulty=None):
+    operators = {
+        'addition': '+',
+        'subtraction': '-',
+        'multiplication': '*',
+        'division': '/',
+    }
+    selected_type = random.choice(problem_types)
+
+    if selected_type in ['addition', 'subtraction']:
+        operand1 = random.randint(1, difficulty)
+        operand2 = random.randint(1, difficulty)
+        if selected_type == 'subtraction':
+            operand1, operand2 = max(operand1, operand2), min(operand1, operand2)
+        problem = f"{operand1} {operators[selected_type]} {operand2}"
+        correct_answer = eval(problem)
+
+    elif selected_type == 'multiplication':
+        max_val = int(multiplication_difficulty)
+        operand1 = random.randint(1, max_val)
+        operand2 = random.randint(1, max_val)
+        problem = f"{operand1} {operators[selected_type]} {operand2}"
+        correct_answer = operand1 * operand2
+
+    elif selected_type == 'division':
+        divisor = random.randint(1, int(division_difficulty))
+        # Ensuring the result is an integer by multiplying the divisor with a random integer
+        dividend = divisor * random.randint(1, 10)
+        problem = f"{dividend} {operators[selected_type]} {divisor}"
+        correct_answer = dividend // divisor
+
+    elif selected_type == '3r-addition':
+        operand1 = random.randint(1, difficulty - 2)
+        operand2 = random.randint(1, difficulty - operand1 - 1)
+        operand3 = random.randint(1, difficulty - operand1 - operand2)
+        # Use "\n" to create line breaks after each operand
+        problem = f"  {operand1}\n+ {operand2}\n+ {operand3}"
+        correct_answer = operand1 + operand2 + operand3
+
+    elif selected_type == '3r-subtraction':
+        operand1 = random.randint(2, difficulty)
+        operand2 = random.randint(1, operand1 - 1)
+        operand3 = random.randint(1, operand1 - operand2)
+        subtraction_type = random.choice(['x-y-z', 'x+y-z', 'x-y+z'])
+        if subtraction_type == 'x-y-z':
+            problem = f"  {operand1}\n- {operand2}\n- {operand3}"
+            eval_problem = f"{operand1}- {operand2}- {operand3}"
+        elif subtraction_type == 'x+y-z':
+            problem = f"  {operand1}\n+ {operand2}\n- {operand3}"
+            eval_problem = f"  {operand1}+ {operand2}- {operand3}"
+        elif subtraction_type == 'x-y+z':
+            problem = f"  {operand1}\n- {operand2}\n+ {operand3}"
+            eval_problem = f"{operand1}- {operand2}+ {operand3}"
+        correct_answer = eval(eval_problem)
+
+    return problem, correct_answer
+
+
+
 def math_problem4(request):
+
+    #Declare a var that will be used on detecting that current problem is 3r problem 
+    is_3r_problem = False
     #if math_problem4 view is called as GET outside of "math_home", then redirect to "math_home"
     if request.method == 'GET':
         return redirect('math_home')
-     # **New** Check if the request comes from the home page
+
     if request.method == 'POST':
         referrer = request.META.get('HTTP_REFERER')
-        home_url = request.build_absolute_uri(reverse('math_home'))  # Assuming 'home' is the name of your home page URL
+        home_url = request.build_absolute_uri(reverse('math_home'))
+
         if referrer == home_url:
             # The request comes from the home page, reset the session
             request.session.flush()
             request.session.create()
 
-     # Scenario 1: Handle the configuration submission from the "home" view
-    if 'difficulty' not in request.session or 'timeout_duration' not in request.session:
-        if request.method == 'POST':
-            difficulty = int(request.POST.get('difficulty'))
-            timeout_duration = int(request.POST.get('timeout'))
-            request.session['difficulty'] = difficulty
-            request.session['timeout_duration'] = timeout_duration
-            # Initialize the session variables for counts
-            request.session['Total_count'] = 0
-            request.session['correct_count'] = 0
-            request.session['wrong_count'] = 0
-            request.session['timeout_count'] = -1
-            request.session['problems'] = []  # To track each problem and status
-        else:
-            # If the settings are not in the session and method is not POST, redirect to home
+        parent_pass = request.POST.get('pass', '').lower()
+        valid_passwords = ['hebatullah', 'ahmed', 'mohamed', 'asmaa']
+        if parent_pass and parent_pass not in valid_passwords:
             return redirect('math_home')
 
-    # Initialize or retrieve current problem count and problem list from the session
-    correct_count = request.session.get('Total_count', 0)
+        # Scenario 1: Handle the configuration submission from the "home" view
+        if 'difficulty' not in request.session or 'timeout_duration' not in request.session:
+            if request.method == 'POST':
+                problem_types = request.POST.getlist('problem_types')
+                difficulty = int(request.POST.get('difficulty',10))
+                timeout_duration = int(request.POST.get('timeout'))
+                multiplication_difficulty = request.POST.get('multiplication_difficulty', None)
+                division_difficulty = request.POST.get('division_difficulty', None)
+
+                request.session['problem_types'] = problem_types
+                request.session['difficulty'] = difficulty
+                request.session['timeout_duration'] = timeout_duration
+                request.session['multiplication_difficulty'] = multiplication_difficulty
+                request.session['division_difficulty'] = division_difficulty
+                request.session['Total_count'] = 0
+                request.session['correct_count'] = 0
+                request.session['wrong_count'] = 0
+                request.session['timeout_count'] = 0
+                request.session['problems'] = []
+
+    Total_count = request.session.get('Total_count', 0)
     correct_count = request.session.get('correct_count', 0)
     wrong_count = request.session.get('wrong_count', 0)
     timeout_count = request.session.get('timeout_count', 0)
     problems = request.session.get('problems', [])
 
-    # Scenario 5: Check if the user pressed the "finish" button
-    if request.method == 'POST' and 'finish' in request.POST:
-        user_answer = request.POST.get('answer')
-        Total_count = request.session.get('Total_count')
-        current_problem = request.session.get('current_problem')
-        correct_answer = request.session.get('correct_answer')
-
-        #Incrementing the total_count for the current issues:
-        Total_count += 1
-        # Check if an answer was provided
-        if user_answer:
-            if int(user_answer) == correct_answer:
-                correct_count += 1
-                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'correct', 'user_answer': user_answer})
-            else:
-                wrong_count += 1
-                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'incorrect', 'user_answer': user_answer})
-        else:
-            timeout_count += 1
-            problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'timeout'})
-
-        # Update the session variables
-        request.session['Total_count'] = Total_count
-        request.session['correct_count'] = correct_count
-        request.session['wrong_count'] = wrong_count
-        request.session['timeout_count'] = timeout_count
-        request.session['problems'] = problems
-
-        # Redirect to the report page
-        return redirect('report')
-
-    # Scenario 2 and 3: Check if the user submitted an answer
     if request.method == 'POST':
         user_answer = request.POST.get('answer')
-        Total_count = request.session.get('Total_count')
         current_problem = request.session.get('current_problem')
         correct_answer = request.session.get('correct_answer')
 
-        #Incrementing the total_count for the current issues:
         Total_count += 1
-        # If an answer was submitted, determine if it's correct or incorrect
-        if user_answer:
-            if int(user_answer) == correct_answer:
-                correct_count += 1
-                problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'correct', 'user_answer': user_answer})
-            else:
+        if user_answer and int(user_answer) == correct_answer:
+            correct_count += 1
+            problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'correct', 'user_answer': user_answer})
+        else:
+            if user_answer is not None:  # Handles the case where user_answer is an empty string
                 wrong_count += 1
                 problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'incorrect', 'user_answer': user_answer})
-        else:
-            # Scenario 4: If no answer is given and the counter times out
-            timeout_count += 1
-            problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'timeout'})
+            else:
+                timeout_count += 1
+                problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'timeout'})
 
-        # Update the session variables
         request.session['Total_count'] = Total_count
         request.session['correct_count'] = correct_count
         request.session['wrong_count'] = wrong_count
         request.session['timeout_count'] = timeout_count
         request.session['problems'] = problems
 
-    # Generate a new problem
-    difficulty = request.session['difficulty']
-    operand1 = random.randint(1, difficulty)
-    operand2 = random.randint(1, difficulty)
-    operator = random.choice(['+', '-'])
-    if operator == '-':
-        operand1, operand2 = max(operand1, operand2), min(operand1, operand2)
+        if 'finish' in request.POST:
+            return redirect('report')
 
-    current_problem = f"{operand1} {operator} {operand2}"
-    correct_answer = eval(current_problem)
+    problem_types = request.session.get('problem_types', [])
+    difficulty = request.session.get('difficulty', 0)
+    multiplication_difficulty = request.session.get('multiplication_difficulty', None)
+    division_difficulty = request.session.get('division_difficulty', None)
 
-    # Store the current problem and its answer in the session
+    if problem_types:
+        current_problem, correct_answer = generate_math_problem(problem_types, difficulty, multiplication_difficulty, division_difficulty)
+        if '\n' in current_problem:
+            is_3r_problem  = True
+
+    else:
+        current_problem, correct_answer = None, None
+
     request.session['current_problem'] = current_problem
     request.session['correct_answer'] = correct_answer
 
-    # Prepare the context for rendering
     context = {
         'problem': current_problem,
-        'timeout_duration': request.session['timeout_duration'],
+        'is_3r_problem': is_3r_problem,  # Replace 'selected_type' with your actual variable
+        'timeout_duration': request.session.get('timeout_duration', 0),
         'Total_count': Total_count,
         'correct_count': correct_count,
         'wrong_count': wrong_count,
         'timeout_count': timeout_count,
     }
 
-    # Render the math_problem4.html template with the context
     return render(request, 'job/math_problem4.html', context)
 
 

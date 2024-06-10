@@ -1,18 +1,137 @@
 {% extends 'base.html' %}
 {% block title %}Math_Application Homepage{% endblock %}
 {% block content %}
-    <h1>Welcome to the Problem Solver</h1>
-    <!-- Additional content for the home page goes here -->
-    <form action="{% url 'math_problem4' %}" method="post">
-        {% csrf_token %}
+<h1>Welcome to the Problem Solver</h1>
+<div id="error-message" style="color: red; display: none;"></div>
+<form id="problem-form" action="{% url 'math_problem4' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label>Select problem types:</label>
         <div>
-            <label for="difficulty">Enter the maximum number for problem difficulty:</label>
-            <input type="number" name="difficulty" id="difficulty" min="1" required title="Please enter a valid integer">
+            <input type="checkbox" name="problem_types" id="addition" value="addition">
+            <label for="addition">Addition</label>
         </div>
         <div>
-            <label for="timeout">Set the timeout per problem (10-120 seconds):</label>
-            <input type="number" name="timeout" id="timeout" min="10" max="120" required title="Timeout must be between 10 to 120 seconds">
+            <input type="checkbox" name="problem_types" id="subtraction" value="subtraction">
+            <label for="subtraction">Subtraction</label>
         </div>
-        <button type="submit">Start Problem Solving</button>
-    </form>
+        <div>
+            <input type="checkbox" name="problem_types" id="3r-addition" value="3r-addition">
+            <label for="3r-addition">3-R Addition</label>
+        </div>
+        <div>
+            <input type="checkbox" name="problem_types" id="3r-subtraction" value="3r-subtraction">
+            <label for="3r-subtraction">3-R Subtraction</label>
+        </div>
+        <div>
+            <input type="checkbox" name="problem_types" id="multiplication" value="multiplication">
+            <label for="multiplication">Multiplication</label>
+        </div>
+        <div>
+            <input type="checkbox" name="problem_types" id="division" value="division">
+            <label for="division">Division</label>
+        </div>
+    </div>
+    <div id="difficulty-div" style="display: none;">
+        <label for="difficulty">Enter the maximum difficulty level for addition/subtractions (num):</label>
+        <input type="number" name="difficulty" id="difficulty" min="1" title="Please enter a valid integer">
+    </div>
+    <div>
+        <label for="timeout">Set the timeout per problem (10-120 seconds):</label>
+        <input type="number" name="timeout" id="timeout" min="10" max="120" required title="Timeout must be between 10 to 120 seconds">
+    </div>
+    <div id="multiplication-difficulty" style="display: none;">
+        <label for="multiplication_difficulty">Multiplication difficulty level (num):</label>
+        <input type="number" name="multiplication_difficulty" id="multiplication_difficulty" min="1" title="Please enter a valid integer">
+    </div>
+    <div id="division-difficulty" style="display: none;">
+        <label for="division_difficulty">Division difficulty level (num):</label>
+        <input type="number" name="division_difficulty" id="division_difficulty" min="1" title="Please enter a valid integer">
+    </div>
+    <div>
+        <label for="Parent Pass">Please Enter the Parent Pass:</label>
+        <input type="text" name="pass" id="pass" required title="Please Enter the Parent Pass:">
+    </div>
+    <button type="submit">Start Problem Solving</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('problem-form');
+    var errorDiv = document.getElementById('error-message');
+    var difficultyDiv = document.getElementById('difficulty-div');
+    var problemCheckboxes = document.querySelectorAll('input[type="checkbox"][name="problem_types"]');
+    var difficultyInput = document.getElementById('difficulty');
+    var multiplicationCheckbox = document.getElementById('multiplication');
+    var divisionCheckbox = document.getElementById('division');
+    var multiplicationDifficultyInput = document.getElementById('multiplication_difficulty');
+    var divisionDifficultyInput = document.getElementById('division_difficulty');
+
+    function toggleDifficultyInput(checkbox, difficultyDiv) {
+        difficultyDiv.style.display = checkbox.checked ? 'block' : 'none';
+        if (!checkbox.checked) {
+            difficultyDiv.querySelector('input').value = '';
+        }
+    }
+
+    function updateDifficultyDisplay() {
+        // Show the difficulty input only if the addition, subtraction, 3r-addition, or 3r-subtraction checkbox is checked
+        var showDifficulty = Array.from(problemCheckboxes).some(function(checkbox) {
+            return (checkbox.checked && ['addition', 'subtraction', '3r-addition', '3r-subtraction'].includes(checkbox.value));
+        });
+        difficultyDiv.style.display = showDifficulty ? 'block' : 'none';
+        if (!showDifficulty) {
+            difficultyInput.value = ''; // Clear the value if it should not be displayed
+        }
+    }
+
+    Array.from(problemCheckboxes).forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateDifficultyDisplay);
+    });
+    multiplicationCheckbox.addEventListener('change', function () {
+        toggleDifficultyInput(this, document.getElementById('multiplication-difficulty'));
+    });
+
+    divisionCheckbox.addEventListener('change', function () {
+        toggleDifficultyInput(this, document.getElementById('division-difficulty'));
+    });
+
+    toggleDifficultyInput(multiplicationCheckbox, document.getElementById('multiplication-difficulty'));
+    toggleDifficultyInput(divisionCheckbox, document.getElementById('division-difficulty'));
+
+    form.addEventListener('submit', function (event) {
+        var isAnyProblemSelected = Array.from(problemCheckboxes).some(checkbox => checkbox.checked);
+        if (!isAnyProblemSelected) {
+            errorDiv.textContent = 'Please select at least one problem type.';
+            errorDiv.style.display = 'block';
+            event.preventDefault();
+            return false;
+        } else if (difficultyDiv.style.display === 'block' && !difficultyInput.value.trim()) {
+            errorDiv.textContent = 'Please set the difficulty level.';
+            errorDiv.style.display = 'block';
+            event.preventDefault();
+            return false;
+        } else {
+            errorDiv.style.display = 'none';
+        }
+
+
+
+        if (multiplicationCheckbox.checked && !multiplicationDifficultyInput.value.trim()) {
+            alert('Please set the multiplication difficulty level.');
+            event.preventDefault();
+            return false;
+        }
+
+        if (divisionCheckbox.checked && !divisionDifficultyInput.value.trim()) {
+            alert('Please set the division difficulty level.');
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    // Initial check to determine if the difficulty input should be displayed
+    updateDifficultyDisplay();
+});
+</script>
 {% endblock %}
