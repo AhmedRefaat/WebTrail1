@@ -134,7 +134,10 @@ table tr.no-answer {
     }
     #sidebar-toggle {
         display: none; /* Hide toggle button on larger screens */
+    }
+}
 
+/* Report page specific styles */
 /* Reset the flex layout for content inside #content specifically for report page */
 #content.report-page {
     display: flex;
