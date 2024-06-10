@@ -135,6 +135,9 @@ def math_problem3(request):
     return render(request, 'job/math_problem3.html', context)
 
 def math_problem4(request):
+    #if math_problem4 view is called as GET outside of "math_home", then redirect to "math_home"
+    if request.method == 'GET':
+        return redirect('math_home')
      # **New** Check if the request comes from the home page
     if request.method == 'POST':
         referrer = request.META.get('HTTP_REFERER')
