@@ -146,6 +146,12 @@ def math_problem4(request):
             # The request comes from the home page, reset the session
             request.session.flush()
             request.session.create()
+            #Check if Parent pass is correct:
+            parent_pass  = request.POST.get('pass')
+            valid_passwords = ['hebatullah', 'ahmed', 'mohamed', 'asmaa']
+            if parent_pass.lower() not in valid_passwords:
+                return redirect('math_home')
+
 
      # Scenario 1: Handle the configuration submission from the "home" view
     if 'difficulty' not in request.session or 'timeout_duration' not in request.session:
