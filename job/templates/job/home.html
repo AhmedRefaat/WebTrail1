@@ -2,9 +2,35 @@
 {% block title %}Math_Application Homepage{% endblock %}
 {% block content %}
     <h1>Welcome to the Problem Solver</h1>
-    <!-- Additional content for the home page goes here -->
     <form action="{% url 'math_problem4' %}" method="post">
         {% csrf_token %}
+        <div>
+            <label>Select problem types:</label>
+            <div>
+                <input type="checkbox" name="problem_types" id="addition" value="addition">
+                <label for="addition">Addition</label>
+            </div>
+            <div>
+                <input type="checkbox" name="problem_types" id="subtraction" value="subtraction">
+                <label for="subtraction">Subtraction</label>
+            </div>
+            <div>
+                <input type="checkbox" name="problem_types" id="3r-addition" value="3r-addition">
+                <label for="3r-addition">3-R Addition</label>
+            </div>
+            <div>
+                <input type="checkbox" name="problem_types" id="3r-subtraction" value="3r-subtraction">
+                <label for="3r-subtraction">3-R Subtraction</label>
+            </div>
+            <div>
+                <input type="checkbox" name="problem_types" id="multiplication" value="multiplication">
+                <label for="multiplication">Multiplication</label>
+            </div>
+            <div>
+                <input type="checkbox" name="problem_types" id="division" value="division">
+                <label for="division">Division</label>
+            </div>
+        </div>
         <div>
             <label for="difficulty">Enter the maximum number for problem difficulty:</label>
             <input type="number" name="difficulty" id="difficulty" min="1" required title="Please enter a valid integer">
@@ -13,10 +39,50 @@
             <label for="timeout">Set the timeout per problem (10-120 seconds):</label>
             <input type="number" name="timeout" id="timeout" min="10" max="120" required title="Timeout must be between 10 to 120 seconds">
         </div>
+        <div id="multiplication-difficulty" style="display: none;">
+            <label for="multiplication_difficulty">Multiplication difficulty level:</label>
+            <input type="text" name="multiplication_difficulty" id="multiplication_difficulty">
+        </div>
+        <div id="division-difficulty" style="display: none;">
+            <label for="division_difficulty">Division difficulty level:</label>
+            <input type="text" name="division_difficulty" id="division_difficulty">
+        </div>
         <div>
             <label for="Parent Pass">Please Enter the Parent Pass:</label>
-            <input type="text" name="pass" id="pass"  required title="Please Enter the Parent Pass:">
+            <input type="text" name="pass" id="pass" required title="Please Enter the Parent Pass:">
         </div>
         <button type="submit">Start Problem Solving</button>
     </form>
+
+    <script>
+        // JavaScript to show/hide difficulty inputs based on checkbox state
+        document.addEventListener('DOMContentLoaded', function () {
+            var multiplicationCheckbox = document.getElementById('multiplication');
+            var divisionCheckbox = document.getElementById('division');
+            var multiplicationDifficulty = document.getElementById('multiplication-difficulty');
+            var divisionDifficulty = document.getElementById('division-difficulty');
+
+            function toggleDifficultyInput(checkbox, difficultyDiv) {
+                if (checkbox.checked) {
+                    difficultyDiv.style.display = 'block';
+                } else {
+                    difficultyDiv.style.display = 'none';
+                }
+            }
+
+            // Event listener for the multiplication checkbox
+            multiplicationCheckbox.addEventListener('change', function () {
+                toggleDifficultyInput(this, multiplicationDifficulty);
+            });
+
+            // Event listener for the division checkbox
+            divisionCheckbox.addEventListener('change', function () {
+                toggleDifficultyInput(this, divisionDifficulty);
+            });
+
+            // Initial check in case the checkbox is already checked when the page loads
+            toggleDifficultyInput(multiplicationCheckbox, multiplicationDifficulty);
+            toggleDifficultyInput(divisionCheckbox, divisionDifficulty);
+        });
+    </script>
 {% endblock %}
