@@ -55,34 +55,51 @@
     </form>
 
     <script>
-        // JavaScript to show/hide difficulty inputs based on checkbox state
-        document.addEventListener('DOMContentLoaded', function () {
-            var multiplicationCheckbox = document.getElementById('multiplication');
-            var divisionCheckbox = document.getElementById('division');
-            var multiplicationDifficulty = document.getElementById('multiplication-difficulty');
-            var divisionDifficulty = document.getElementById('division-difficulty');
+            document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('form');
+        var multiplicationCheckbox = document.getElementById('multiplication');
+        var divisionCheckbox = document.getElementById('division');
+        var multiplicationDifficultyInput = document.getElementById('multiplication_difficulty');
+        var divisionDifficultyInput = document.getElementById('division_difficulty');
 
-            function toggleDifficultyInput(checkbox, difficultyDiv) {
-                if (checkbox.checked) {
-                    difficultyDiv.style.display = 'block';
-                } else {
-                    difficultyDiv.style.display = 'none';
-                }
+        function toggleDifficultyInput(checkbox, difficultyDiv) {
+            difficultyDiv.style.display = checkbox.checked ? 'block' : 'none';
+            // Clear the value when the checkbox is unchecked
+            if (!checkbox.checked) {
+                difficultyDiv.querySelector('input').value = '';
+            }
+        }
+
+        // Event listener for the multiplication checkbox
+        multiplicationCheckbox.addEventListener('change', function () {
+            toggleDifficultyInput(this, document.getElementById('multiplication-difficulty'));
+        });
+
+        // Event listener for the division checkbox
+        divisionCheckbox.addEventListener('change', function () {
+            toggleDifficultyInput(this, document.getElementById('division-difficulty'));
+        });
+
+        // Initial check in case the checkbox is already checked when the page loads
+        toggleDifficultyInput(multiplicationCheckbox, document.getElementById('multiplication-difficulty'));
+        toggleDifficultyInput(divisionCheckbox, document.getElementById('division-difficulty'));
+
+        // Form submission event
+        form.addEventListener('submit', function (event) {
+            // Check if multiplication difficulty should be set
+            if (multiplicationCheckbox.checked && !multiplicationDifficultyInput.value.trim()) {
+                alert('Please set the multiplication difficulty level.');
+                event.preventDefault(); // Prevent form from submitting
+                return false; // Stop form submission
             }
 
-            // Event listener for the multiplication checkbox
-            multiplicationCheckbox.addEventListener('change', function () {
-                toggleDifficultyInput(this, multiplicationDifficulty);
-            });
-
-            // Event listener for the division checkbox
-            divisionCheckbox.addEventListener('change', function () {
-                toggleDifficultyInput(this, divisionDifficulty);
-            });
-
-            // Initial check in case the checkbox is already checked when the page loads
-            toggleDifficultyInput(multiplicationCheckbox, multiplicationDifficulty);
-            toggleDifficultyInput(divisionCheckbox, divisionDifficulty);
+            // Check if division difficulty should be set
+            if (divisionCheckbox.checked && !divisionDifficultyInput.value.trim()) {
+                alert('Please set the division difficulty level.');
+                event.preventDefault(); // Prevent form from submitting
+                return false; // Stop form submission
+            }
         });
+    });
     </script>
 {% endblock %}
