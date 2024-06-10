@@ -1,77 +1,75 @@
 {% extends 'base.html' %}
 
-
 {% block title %}Math Problems{% endblock %}
 
 {% block head %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            var timeoutDuration = {{ timeout_duration }};
-            var timeoutTimer;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var timeoutDuration = {{ timeout_duration }};
+        var timeoutTimer;
 
-            function startTimer() {
-                timeoutTimer = setInterval(function() {
-                    timeoutDuration--;
-                    $('#timeout-timer').text(timeoutDuration);
-                    if (timeoutDuration === 0) {
-                        clearInterval(timeoutTimer);
-                        $('#math-form').submit();
-                    }
-                }, 1000);
-            }
-
-            startTimer();
-
-            // Make the answer textbox always active
-            $('input[name="answer"]').focus();
-
-            // Submit the form on pressing the Enter key
-            $('input[name="answer"]').keypress(function(event) {
-                if (event.which === 13) {
-                    event.preventDefault();
+        function startTimer() {
+            timeoutTimer = setInterval(function() {
+                timeoutDuration--;
+                $('#timeout-timer').text(timeoutDuration);
+                if (timeoutDuration === 0) {
+                    clearInterval(timeoutTimer);
                     $('#math-form').submit();
                 }
-            });
+            }, 1000);
+        }
 
-            $('#math-form').submit(function(event) {
+        startTimer();
+
+        // Make the answer textbox always active
+        $('input[name="answer"]').focus();
+
+        // Submit the form on pressing the Enter key
+        $('input[name="answer"]').keypress(function(event) {
+            if (event.which === 13) {
                 event.preventDefault();
-                clearInterval(timeoutTimer);
-                this.submit();
-            });
+                $('#math-form').submit();
+            }
         });
-    </script>
+
+        $('#math-form').submit(function(event) {
+            event.preventDefault();
+            clearInterval(timeoutTimer);
+            this.submit();
+        });
+    });
+</script>
 {% endblock %}
 
 {% block content %}
-    <h1>Math Problem</h1>
-    <p>Solve the following problem:</p>
-    <p>{{ problem }} = </p>
-    <form id="math-form" method="post" action="{% url 'math_problem4' %}">
-        {% csrf_token %}
-        <input type="number" name="answer" required autofocus>
-        <button type="submit">Submit</button>
-        <!-- <button type="submit" name="finish">Finish</button> -->
-        <button onclick="location.href = 'report'">Finish</button>
+<h1>Math Problem</h1>
+<h3>Solve the following problem 💪:</h3>
+<pre>
 
+</pre>
+{% if is_3r_problem %}
+<!-- Presenting 3r-addition/subtraction in multi-line format -->
+<pre id="math-problem">
+<h2>{{ problem|linebreaksbr }}</h2>
+---------
+</pre>
+{% else %}
+<!-- Presenting single line problems -->
+<h3 id="math-problem">{{ problem }} = </h3>
+{% endif %}
+<form id="math-form" method="post" action="{% url 'math_problem4' %}">
+    {% csrf_token %}
+    <input type="number" name="answer" required autofocus>
+    <button type="submit">Submit</button>
+    <button type="button" onclick="location.href = '{% url 'report' %}'">Finish</button>
+</form>
 
-    </form>
-
-
-    <pre>
-
-
-
-    </pre>
-    <hr>
-    <p>👉 Time remaining: <span id="timeout-timer">{{ timeout_duration }}</span> seconds👈 </p>
-    <!-- <p>👌👌 Total Counts   : {{ Total_count }}</p> -->
-    <h3>👌 Total Counts 👌: {{ Total_count }}</h3>
-    <!-- <p>🤩🤩Correct answers: {{ correct_count }}</p> -->
-    <h3>🤩 Correct answers 🤩 : {{ correct_count }}</h3>
-    <!-- <p>😥😥Wrong answers: {{ wrong_count }}</p> -->
-    <h3>😥 Wrong answers 😥 : {{ wrong_count }}</h3>
-    <!-- <p>⏳⏳Timeouts: {{ timeout_count }}</p> -->
-    <h3>⏳ Timeouts ⏳ : {{ timeout_count }}</h3>
-    <hr>
+<hr>
+<p>👉 Time remaining: <span id="timeout-timer">{{ timeout_duration }}</span> seconds👈 </p>
+<h3>👌 Total Counts 👌: {{ Total_count }}</h3>
+<h3>🤩 Correct answers 🤩 : {{ correct_count }}</h3>
+<h3>😥 Wrong answers 😥 : {{ wrong_count }}</h3>
+<h3>⏳ Timeouts ⏳ : {{ timeout_count }}</h3>
+<hr>
 {% endblock %}
