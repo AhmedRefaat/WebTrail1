@@ -1,84 +1,49 @@
 {% extends 'base.html' %}
 
-{% block title %}Your Today's Report{% endblock %}
+{% block title %}Your Today's Report 😉{% endblock %}
 
 {% block content %}
-<h1>Your Today's Report 😀</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Problem</th>
-            <th>Correct Answer</th>
-            <th>Your Answer</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for problem in problems %}
-        <tr class="{% if problem.status == 'correct' %}correct{% elif problem.status == 'incorrect' %}incorrect{% elif problem.status == 'timeout' %}timeout{% elif problem.user_answer == None %}no-answer{% endif %}">
-            <td>{{ problem.problem }}</td>
-            <td>{{ problem.correct_answer }}</td>
-            <td>
-                {% if problem.status == 'correct' %}
-                    {{ problem.user_answer }} --> 👍 👌 ✔
-                {% elif problem.status == 'incorrect' %}
-                    {{ problem.user_answer }} (Wrong)
-                {% elif problem.status == 'timeout' %}
-                    Timeout
-                {% else %}
-                    No Answer
-                {% endif %}
-            </td>
-        </tr>
+<div id="content" class="report-page">
+    <div class="report-table">
+        <h1>Your Today's Report 😀</h1>
+        <table>
+            <thead>
+				<tr>
+					<th>Num</th>
+					<th>Problem</th>
+					<th>Correct Answer</th>
+					<th>Your Answer</th>
+				</tr>
+		</thead>
+		<tbody>
+
+			{% for problem in problems %}
+			<tr class="{% if problem.status == 'correct' %}correct{% elif problem.status == 'incorrect' %}incorrect{% elif problem.status == 'timeout' %}timeout{% elif problem.user_answer == None %}no-answer{% endif %}">
+				<td>{{ forloop.counter}}</td>
+				<td>{{ problem.problem }}</td>
+				<td>{{ problem.correct_answer }}</td>
+				<td>
+					{% if problem.status == 'correct' %}
+						{{ problem.user_answer }} --> 👍 👌 ✔
+					{% elif problem.status == 'incorrect' %}
+						{{ problem.user_answer }} (😥Wrong😥)
+					{% elif problem.status == 'timeout' %}
+						⏳Timeout⏳
+					{% else %}
+						🙉No Answer🙉
+					{% endif %}
+				</td>
+			</tr>
         {% endfor %}
-    </tbody>
-</table>
-
-<h3>Correct Answers: {{ correct_count }}</h3>
-<h3>Wrong Answers: {{ wrong_count }}</h3>
-<h3>Timeouts: {{ timeout_count }}</h3>
-<h3>Note: {{ note }}</h3>
-
-
-{% endblock %}
-
-{% block css %}
-<style>
-    table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-        margin-top: 20px;
-    }
-    th, td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        border-right: 1px solid #ddd;
-        background-color: #f9f9f9;
-    }
-    th:first-child, td:first-child {
-        border-left: 1px solid #ddd;
-    }
-    th {
-        background-color: #f2f2f2;
-        color: black;
-    }
-    .correct {
-        background-color: #90EE90; /* Light green */
-    }
-    .incorrect {
-        background-color: #FFB6C1; /* Light red */
-    }
-    .timeout {
-        background-color: #FFFF99; /* Light yellow */
-    }
-    .no-answer {
-        background-color: #FFCCCB; /* Light red */
-        font-weight: bold;
-    }
-    th, td {
-        border: 1px solid #ddd;
-        border-style: inset; /* 3D effect for borders */
-    }
-</style>
+		</tbody>
+        </table>
+    </div>
+    <div class="report-statistics">
+        <h3>😉 Total Count 😉     : {{ Total_count }}</h3>
+        <h3>🤩 Correct Answers 🤩 : {{ correct_count }}</h3>
+        <h3>😥 Wrong Answers 😥   : {{ wrong_count }}</h3>
+        <h3>⏳ Timeouts ⏳         : {{ timeout_count }}</h3>
+        <h3>Note: {{ note }}</h3>
+    </div>
+</div>
 {% endblock %}
