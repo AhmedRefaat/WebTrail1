@@ -136,10 +136,6 @@ def math_problem3(request):
 
 
 def generate_math_problem(problem_types, difficulty, multiplication_difficulty=None, division_difficulty=None):
-
-    logger.LogDebugMsgs('**************************************************************************************')
-    logger.LogDebugMsgs(f'problem_types:{problem_types}\ndifficulty:{difficulty}\nmultiplication_difficulty:{multiplication_difficulty}\ndivision_difficulty{division_difficulty}')
-    logger.LogDebugMsgs('**************************************************************************************')
     operators = {
         'addition': '+',
         'subtraction': '-',
