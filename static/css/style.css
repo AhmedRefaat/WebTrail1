@@ -134,5 +134,46 @@ table tr.no-answer {
     }
     #sidebar-toggle {
         display: none; /* Hide toggle button on larger screens */
+
+/* Reset the flex layout for content inside #content specifically for report page */
+#content.report-page {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+}
+
+/* Styling for the report container */
+.report-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Styling for the table on the report page */
+.report-page .report-table {
+    flex: 0 0 60%; /* Take up 60% of the container width */
+    max-width: 60%;
+}
+
+/* Styling for the statistics on the report page */
+.report-page .report-statistics {
+    flex: 1;
+    max-width: 40%; /* Take up the remaining space */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Ensure the table does not have an overly wide layout on smaller screens */
+@media screen and (max-width: 767px) {
+    .report-page .report-table,
+    .report-page .report-statistics {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: 20px;
     }
 }

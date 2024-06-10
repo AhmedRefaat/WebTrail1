@@ -152,15 +152,17 @@ def math_problem4(request):
             request.session['difficulty'] = difficulty
             request.session['timeout_duration'] = timeout_duration
             # Initialize the session variables for counts
+            request.session['Total_count'] = 0
             request.session['correct_count'] = 0
             request.session['wrong_count'] = 0
-            request.session['timeout_count'] = 0
+            request.session['timeout_count'] = -1
             request.session['problems'] = []  # To track each problem and status
         else:
             # If the settings are not in the session and method is not POST, redirect to home
             return redirect('math_home')
 
     # Initialize or retrieve current problem count and problem list from the session
+    correct_count = request.session.get('Total_count', 0)
     correct_count = request.session.get('correct_count', 0)
     wrong_count = request.session.get('wrong_count', 0)
     timeout_count = request.session.get('timeout_count', 0)
@@ -169,9 +171,12 @@ def math_problem4(request):
     # Scenario 5: Check if the user pressed the "finish" button
     if request.method == 'POST' and 'finish' in request.POST:
         user_answer = request.POST.get('answer')
+        Total_count = request.session.get('Total_count')
         current_problem = request.session.get('current_problem')
         correct_answer = request.session.get('correct_answer')
 
+        #Incrementing the total_count for the current issues:
+        Total_count += 1
         # Check if an answer was provided
         if user_answer:
             if int(user_answer) == correct_answer:
@@ -185,6 +190,7 @@ def math_problem4(request):
             problems.append({'problem': current_problem, 'correct_answer': correct_answer,'status': 'timeout'})
 
         # Update the session variables
+        request.session['Total_count'] = Total_count
         request.session['correct_count'] = correct_count
         request.session['wrong_count'] = wrong_count
         request.session['timeout_count'] = timeout_count
@@ -196,9 +202,12 @@ def math_problem4(request):
     # Scenario 2 and 3: Check if the user submitted an answer
     if request.method == 'POST':
         user_answer = request.POST.get('answer')
+        Total_count = request.session.get('Total_count')
         current_problem = request.session.get('current_problem')
         correct_answer = request.session.get('correct_answer')
 
+        #Incrementing the total_count for the current issues:
+        Total_count += 1
         # If an answer was submitted, determine if it's correct or incorrect
         if user_answer:
             if int(user_answer) == correct_answer:
@@ -213,6 +222,7 @@ def math_problem4(request):
             problems.append({'problem': current_problem, 'correct_answer': correct_answer, 'status': 'timeout'})
 
         # Update the session variables
+        request.session['Total_count'] = Total_count
         request.session['correct_count'] = correct_count
         request.session['wrong_count'] = wrong_count
         request.session['timeout_count'] = timeout_count
@@ -237,6 +247,7 @@ def math_problem4(request):
     context = {
         'problem': current_problem,
         'timeout_duration': request.session['timeout_duration'],
+        'Total_count': Total_count,
         'correct_count': correct_count,
         'wrong_count': wrong_count,
         'timeout_count': timeout_count,
@@ -376,6 +387,7 @@ def math_problem40(request):
 def report(request):
     problems = request.session.get('problems', [])
     total_problems = len(problems)
+    total_count = request.session.get('Total_count', 0)
     correct_count = request.session.get('correct_count', 0)
     wrong_count = request.session.get('wrong_count', 0)
     timeout_count = request.session.get('timeout_count', 0)
@@ -399,6 +411,7 @@ def report(request):
 
     context = {
         'problems': problems,
+        'Total_count': total_count,
         'correct_count': correct_count,
         'wrong_count': wrong_count,
         'timeout_count': timeout_count,
