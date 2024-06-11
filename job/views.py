@@ -217,7 +217,9 @@ def math_problem4(request):
         if 'difficulty' not in request.session or 'timeout_duration' not in request.session:
             if request.method == 'POST':
                 problem_types = request.POST.getlist('problem_types')
-                difficulty = int(request.POST.get('difficulty',10))
+                difficulty_str = request.POST.get('difficulty', '10')
+                difficulty = int(difficulty_str) if difficulty_str.isdigit() else 10
+                # difficulty = int(request.POST.get('difficulty',10))
                 timeout_duration = int(request.POST.get('timeout'))
                 multiplication_difficulty = request.POST.get('multiplication_difficulty', None)
                 division_difficulty = request.POST.get('division_difficulty', None)
