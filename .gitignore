@@ -2,3 +2,6 @@ MathAppEnv/
 job/templates/job/math_problem4_old.html
 job/templates/job/report_old.html
 templates/base_old.html
+project/__pycache__/
+common_utils/__pycache__/
+job/__pycache__/
